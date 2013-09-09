@@ -19,7 +19,7 @@ start = ->
     console.log 'Listening on sharelog.pipe...'
 
     rl = readline.createInterface {
-        input: fs.createReadStream('sharelog.pipe')
+        input: fs.createReadStream(__dirname + '/sharelog.pipe')
         output: process.stdout,
         terminal: false
     }
@@ -47,7 +47,7 @@ start = ->
                     shareDifficulty: shareDifficulty,
                     shareData: pieces[7]
                 }
-                console.log "Submitting share diff #{share.targetDifficulty}/#{share.shareDifficulty} for pool #{share.pool}"
+                console.log "Submitting share diff #{share.shareDifficulty}/#{share.targetDifficulty} for pool #{share.pool}"
                 for client in clients
                     client.post "/submitshare?key=#{key}", share, ->
             catch e
