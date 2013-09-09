@@ -4,7 +4,8 @@
   "dependencies": {
     "buffertools": "~1.1.1",
     "bignum": "~0.6.1",
-    "request-json": "~0.4.1"
+    "request-json": "~0.4.1",
+    "config": "~0.4.29"
   },
   "author": "Erv Walter <erv@ewal.net> (http://www.ewal.net)"
 }

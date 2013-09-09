@@ -3,13 +3,13 @@ readline = require('readline')
 os = require('os')
 bignum = require('bignum')
 request = require('request-json')
+fs = require('fs')
+config = require('config')
 
-servers = [
-  'http://bitcoin-command/',
-]
+namedPipe = fs.createReadStream('sharelog.pipe')
 
 rl = readline.createInterface {
-  input: process.stdin
+  input: namedPipe
   output: process.stdout,
   terminal: false
 }
@@ -20,7 +20,7 @@ hostname = os.hostname()
 key = process.argv[2] || ""
 
 clients = []
-clients.push request.newClient(server) for server in servers
+clients.push request.newClient(server) for server in config.servers
 
 rl.on 'line', (line) ->
   if line.match(sharePattern)
