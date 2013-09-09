@@ -16,7 +16,7 @@ clients = []
 clients.push request.newClient(server) for server in config.servers
 
 start = ->
-    console.log 'Listening on sharelog.pipe...'
+    console.log "Listening on #{__dirname + '/sharelog.pipe'}..."
 
     rl = readline.createInterface {
         input: fs.createReadStream(__dirname + '/sharelog.pipe')
