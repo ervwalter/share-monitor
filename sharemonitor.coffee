@@ -10,8 +10,6 @@ bitcoin = require('./bitcoin')
 sharePattern = /^\d+\,/
 hostname = os.hostname()
 
-key = process.argv[2] || ""
-
 clients = []
 clients.push request.newClient(server) for server in config.servers
 
@@ -49,13 +47,13 @@ start = ->
                 }
                 console.log "Submitting share diff #{share.shareDifficulty}/#{share.targetDifficulty} for pool #{share.pool}"
                 for client in clients
-                    client.post "/submitshare?key=#{key}", share, ->
+                    client.post "/submitshare?key=#{config.key}", share, ->
             catch e
             #absorb
             return
 
     rl.on 'close', ->
-        console.log 'Connection to sharelog.pipe close.'
+        console.log 'Connection to sharelog.pipe closed.'
         # start another listener
         setTimeout start
 
