@@ -62,26 +62,10 @@ startPipe = ->
         # start another listener
         setTimeout startPipe
 
-errorTail = ->
-    # most likely the file doesn't exist. try again in 1 second.
-    # Note, this only works at initial startup.  If the file is deleted while this is running,
-    # there will be an unhandled exception and this script will exit, so the script should
-    # probably be run with 'forever'
-    console.log "File doesn't exist. Retrying in 1s..."
-    setTimeout startTail, 1000
-
 startTail = ->
     console.log "Tailing file #{config.logFile}..."
     tail = new Tail(config.logFile)
     tail.on 'line', parseLine
-
-process.on 'uncaughtException', (err) ->
-    if config.pipe
-        console.log "Unknown error: #{err.message}. Exiting..."
-        process.exit(1)
-    else
-        console.log err
-        setTimeout errorTail
 
 if config.pipe
     startPipe()
