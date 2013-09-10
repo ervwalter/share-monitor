@@ -47,10 +47,17 @@ parseLine = (line) ->
 rl = null
 
 startPipe = ->
-    console.log "Listening on named pipe #{config.logFile}..."
+
+    if config.mode == 'pipe'
+        console.log "Listening on named pipe #{config.filename}..."
+        input = fs.createReadStream(config.filename)
+    else
+        console.log "Reading from stdin..."
+        input = process.stdin
+
 
     rl = readline.createInterface {
-        input: fs.createReadStream(config.logFile)
+        input: input
         output: process.stdout,
         terminal: false
     }
@@ -58,16 +65,16 @@ startPipe = ->
     rl.on 'line', parseLine
 
     rl.on 'close', ->
-        console.log 'Named pipe connection closed.'
-        # start another listener
-        setTimeout startPipe
+        if config.mode == 'pipe'
+            console.log 'Named pipe connection closed.'
+            setTimeout startPipe
 
 startTail = ->
-    console.log "Tailing file #{config.logFile}..."
-    tail = new Tail(config.logFile)
+    console.log "Tailing file #{config.filename}..."
+    tail = new Tail(config.filename)
     tail.on 'line', parseLine
 
-if config.pipe
-    startPipe()
-else
+if config.mode == 'tail'
     startTail()
+else
+    startPipe()
