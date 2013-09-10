@@ -44,30 +44,23 @@ parseLine = (line) ->
             #absorb
         return
 
-rl = null
-
 startPipe = ->
-
     if config.mode == 'pipe'
         console.log "Listening on named pipe #{config.filename}..."
         input = fs.createReadStream(config.filename)
     else
         console.log "Reading from stdin..."
         input = process.stdin
-
-
     rl = readline.createInterface {
         input: input
         output: process.stdout,
         terminal: false
     }
-
-    rl.on 'line', parseLine
-
     rl.on 'close', ->
         if config.mode == 'pipe'
             console.log 'Named pipe connection closed.'
             setTimeout startPipe
+    rl.on 'line', parseLine
 
 startTail = ->
     console.log "Tailing file #{config.filename}..."
