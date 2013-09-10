@@ -71,9 +71,11 @@ errorTail = ->
 startTail = ->
     console.log "Tailing file #{config.logFile}..."
 
-    tail = new Tail(config.logFile)
-    tail.on 'line', parseLine
-    tail.on 'error', errorTail
+    try
+        tail = new Tail(config.logFile)
+        tail.on 'line', parseLine
+        tail.on 'error', errorTail
+    catch e
 
 if config.pipe
     startPipe()
