@@ -44,6 +44,8 @@ parseLine = (line) ->
             #absorb
         return
 
+rl = null
+
 startPipe = ->
     console.log "Listening on named pipe #{config.logFile}..."
 
@@ -70,12 +72,16 @@ errorTail = ->
 
 startTail = ->
     console.log "Tailing file #{config.logFile}..."
+    tail = new Tail(config.logFile)
+    tail.on 'line', parseLine
 
-    try
-        tail = new Tail(config.logFile)
-        tail.on 'line', parseLine
-        tail.on 'error', errorTail
-    catch e
+process.on 'uncaughtException', (err) ->
+    if config.pipe
+        console.log "Unknown error: #{err.message}. Exiting..."
+        process.exit(1)
+    else
+        console.log err
+        setTimeout errorTail
 
 if config.pipe
     startPipe()
